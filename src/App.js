@@ -111,6 +111,7 @@ function App() {
     }
 
   }
+  
   const memoizedData = useMemo(() => {
     return (
       <div style={styles.todoItems} key='uniqueid'>
