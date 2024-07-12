@@ -1,12 +1,8 @@
 import './App.css';
 import FileUploader from './components/FileUploader/FileUploader';
-import { useEffect, useMemo, useState } from 'react';
-
 
 function App() {
-  const [data, setData] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [searchText, setSearchText] = useState('')
+  
   const fetchData = async () => {
     try {
       const response = await fetch('http://localhost:3001/todos');
@@ -26,14 +22,12 @@ function App() {
     const timer = setTimeout(() => {
       fetchData();
     }, 500); // 500ms bekleyerek arama işlemini gerçekleştiriyoruz
-    convertDate('2-3-2018')
     return () => clearTimeout(timer); // Component yeniden render edilirken timer'ı temizle
   }, [searchText]);
 
 
   function handleSubmit(event) {
     event.preventDefault();
-
     try {
       const formData = new FormData(event.target);
       const todo = formData.get('todo');
@@ -56,45 +50,8 @@ function App() {
     } catch (e) {
       console.error("sending error!")
     }
-
-
-
   }
-  const handleCheck = async (e, todo) => {
-    setLoading(true);
-    const updatedTodo = {
-      ...todo,
-      completed: !todo.completed,
-    };
-
-    try {
-      const response = await fetch(`http://localhost:3001/todos/${todo.id}`, {
-        method: 'PATCH', // Veriyi güncellediğiniz için PATCH metodunu kullanmalısınız
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedTodo), // Tamamlama durumunu güncelleyen todo nesnesi
-      });
-
-      if (!response.ok) {
-        throw new Error('Network response was not ok.');
-      }
-
-      // Veri başarıyla güncellendiyse, local state'i de güncelleyebilirsiniz
-      const updatedData = data.map(item =>
-        item.id === todo.id ? { ...item, completed: !item.completed } : item
-      );
-      setTimeout(() => {
-        console.log("wtf")
-      }, 2000)
-      setData(updatedData);
-    } catch (error) {
-      console.error("Error updating todo:", error);
-    } finally {
-
-      setLoading(false);
-    }
-  };
+  
   const convertDate = (date_) => {
     if (date_ !== undefined) {
       const parts = date_.split('-')
@@ -103,15 +60,9 @@ function App() {
         const month = parseInt(parts[1])
         const year = parseInt(parts[2])
         let today = new Date(year, month, day);
-        
-        console.log("date_:",date_)
-        console.log("today.getDay1:",today.getDate())
-
-        today.setDate(today.getDate() + 2); // 2 gün ekleyerek tarihi güncelliyoruz
-        console.log("today.getDay2:",today.getDate())
+        today.setDate(today.getDate() + 2);
         console.log("today.year:",today.getFullYear())
         console.log("today.month:",today.getMonth())
-
         return today.toDateString()
       }
     } else {
@@ -128,10 +79,6 @@ function App() {
             <tr>
               <td style={{ width: 50, textAlign: 'left' }}>Checked</td>
               <td style={{ width: 50, textAlign: 'center' }}>Id</td>
-              <td style={{ width: 100, textAlign: 'center' }}>Completed</td>
-              <td style={{ width: 150, textAlign: 'center' }}>ToDo</td>
-              <td style={{ width: 150, textAlign: 'center' }}>Date</td>
-              <td style={{ width: 150, textAlign: 'right' }}>Deadline</td>
             </tr>
           </thead>
           <tbody>
@@ -144,11 +91,7 @@ function App() {
                     checked={item.completed}
                   />
                 </td>
-                <td style={{ width: 50, textAlign: 'center' }}>{item.id}</td>
-                <td style={{ width: 50, textAlign: 'center' }}>{item.completed ? 'Yes' : 'No'}</td>
-                <td style={{ width: 150, textAlign: 'center' }}>{item.title}</td>
-                <td style={{ width: 150, textAlign: 'center' }}>{item?.date}</td>
-                <td style={{ width: 150, textAlign: 'right' }}>{convertDate(item?.date)}</td>
+                <td style={{ width: 50, textAlign: 'center' }}>{item.id}</td>                
               </tr>)
             }
           </tbody>
