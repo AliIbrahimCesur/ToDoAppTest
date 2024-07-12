@@ -18,6 +18,15 @@ jobs:
         with:
           node-version: '14'
 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build the application
+        run: npm run build
+
+      - name: Test the application
+        run: npm test
+
       - name: Build Docker image
         run: docker build -t my-app .
 
