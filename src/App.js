@@ -109,9 +109,8 @@ function App() {
     } else {
       return 'Invalid Date!'
     }
-
   }
-  
+
   const memoizedData = useMemo(() => {
     return (
       <div style={styles.todoItems} key='uniqueid'>
